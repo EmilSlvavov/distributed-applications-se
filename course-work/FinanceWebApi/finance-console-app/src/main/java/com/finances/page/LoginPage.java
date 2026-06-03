@@ -1,5 +1,6 @@
 package com.finances.page;
 
+import com.finances.exception.ApiException;
 import com.finances.service.AuthService;
 import com.finances.util.ConsoleUI;
 
@@ -11,12 +12,15 @@ public class LoginPage {
         String username = ConsoleUI.readInput("\nEnter username: ");
         String password = ConsoleUI.readPassword("Enter password: ");
 
-        if (authService.login(username, password)) {
-            ConsoleUI.printSuccess("Login successful!");
-            ConsoleUI.pause();
-        } else {
-            ConsoleUI.printError("Login failed. Invalid credentials.");
-            ConsoleUI.pause();
+        try {
+            if (authService.login(username, password)) {
+                ConsoleUI.printSuccess("Login successful!");
+            } else {
+                ConsoleUI.printError("Login failed. Invalid credentials.");
+            }
+        } catch (ApiException e) {
+            ConsoleUI.printError(e.getDetail());
         }
+        ConsoleUI.pause();
     }
 }

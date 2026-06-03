@@ -1,5 +1,6 @@
 package com.finances;
 
+import com.finances.dto.response.UserResponse;
 import com.finances.exception.ApiException;
 import com.finances.service.*;
 import com.finances.page.*;
@@ -242,12 +243,11 @@ public class FinanceConsoleApp {
                     ProfilePage.show(userService);
                     break;
                 case "2":
-                    String userIdStr = ConsoleUI.readInput("Enter your user ID: ");
-                    try {
-                        Integer userId = Integer.parseInt(userIdStr);
-                        ChangePasswordPage.show(userService, userId);
-                    } catch (NumberFormatException e) {
-                        ConsoleUI.printError("Invalid ID format.");
+                    UserResponse me = userService.getCurrentUser();
+                    if (me != null) {
+                        ChangePasswordPage.show(userService, me.getId());
+                    } else {
+                        ConsoleUI.printError("Failed to retrieve current user.");
                         ConsoleUI.pause();
                     }
                     break;
